@@ -13,9 +13,13 @@ EXPOSE 8000
 ARG DEV=false
 RUN python -m venv /py && \
     pip install --upgrade pop && \
+    apk add --update --no-cache postgresql-client && \
+    apk add --update --no-cache --virtual .tmp-build-deps \
+        build-base postgresql-dev musl-dev && \
     pip install -r /requirements.txt && \
     if [ $DEV == "true" ]; \
         then  pip install -r /requirements.dev.txt ; \
-    fi
+    fi && \
+    apk del .tmp-build-deps
 
 ENV PATH="C:\Program Files\Python38\:$PATH"
